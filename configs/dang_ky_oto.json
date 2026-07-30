@@ -1,0 +1,123 @@
+{
+  "config_id": "dang_ky_oto",
+  "ten": "Giấy đăng ký xe ô tô",
+  "type_config": "DKX_OTO",
+  "identifier": {
+    "mode": "multiple",
+    "fields": [
+      "Số khung",
+      "Số máy"
+    ]
+  },
+  "review_mode": "threshold",
+  "fields": [
+    {
+      "ten": "ten_chu_xe",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "tên chủ xe, sau 'Tên chủ xe (Owner's full name)'",
+      "use_ocr_hint": true,
+      "min_confidence": 0.95,
+      "regex": null
+    },
+    {
+      "ten": "dia_chi",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "địa chỉ chủ xe, sau 'Địa chỉ (Address)'",
+      "use_ocr_hint": true,
+      "min_confidence": 0.9,
+      "regex": null
+    },
+    {
+      "ten": "nhan_hieu",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "nhãn hiệu xe, sau 'Nhãn hiệu (Brand)', ví dụ FORD, TOYOTA",
+      "use_ocr_hint": false,
+      "min_confidence": 0.95,
+      "regex": null
+    },
+    {
+      "ten": "loai_xe",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "loại xe, sau 'Loại xe (Type)', ví dụ Ô tô con",
+      "use_ocr_hint": false,
+      "min_confidence": 0.95,
+      "regex": null
+    },
+    {
+      "ten": "mau_son",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "màu sơn xe, sau 'Màu sơn (Color)'",
+      "use_ocr_hint": false,
+      "min_confidence": 0.95,
+      "regex": null
+    },
+    {
+      "ten": "so_may",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "số máy (Engine No), dãy chữ và số",
+      "use_ocr_hint": true,
+      "min_confidence": 0.97,
+      "regex": null
+    },
+    {
+      "ten": "so_khung",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "số khung (Chassis No), dãy chữ và số",
+      "use_ocr_hint": true,
+      "min_confidence": 0.97,
+      "regex": null
+    },
+    {
+      "ten": "so_loai",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "số loại / model code, sau 'Số loại (Model code)', ví dụ FOCUS",
+      "use_ocr_hint": true,
+      "min_confidence": 0.95,
+      "regex": null
+    },
+    {
+      "ten": "dung_tich",
+      "kieu": "number",
+      "loai": "extract",
+      "mo_ta": "dung tích xi-lanh (Capacity), chỉ ghi số, ví dụ 1498",
+      "use_ocr_hint": true,
+      "min_confidence": 0.97,
+      "regex": "^\\d+$"
+    },
+    {
+      "ten": "so_cho_ngoi",
+      "kieu": "number",
+      "loai": "extract",
+      "mo_ta": "số chỗ ngồi (Sit), chỉ ghi số",
+      "use_ocr_hint": true,
+      "min_confidence": 0.97,
+      "regex": "^\\d+$"
+    },
+    {
+      "ten": "bien_so",
+      "kieu": "text",
+      "loai": "extract",
+      "mo_ta": "biển số đăng ký (No Plate), ví dụ 51H-083.92",
+      "use_ocr_hint": true,
+      "min_confidence": 0.97,
+      "regex": null
+    },
+    {
+      "ten": "ngay_dang_ky_lan_dau",
+      "kieu": "date",
+      "loai": "extract",
+      "mo_ta": "ngày đăng ký lần đầu (Date of first registration), đổi thành dd/mm/yyyy",
+      "use_ocr_hint": true,
+      "min_confidence": 0.97,
+      "regex": "^\\d{1,2}/\\d{1,2}/\\d{4}$"
+    }
+  ]
+}

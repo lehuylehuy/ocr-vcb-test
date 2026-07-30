@@ -1,0 +1,43 @@
+{
+  "config_id": "bctc_tt200_cdkt",
+  "ten": "BẢNG CÂN ĐỐI KẾ TOÁN - TT200",
+  "type_config": "BCTC_TT200_CDKT",
+  "_nguon": "Port từ mẫu input thật của VCB (ocr-gpu-service/configs/bctc_tt200.json, template 'BẢNG CÂN ĐỐI KẾ TOÁN__TT200')",
+  "identifier": { "mode": "single", "fields": ["Bảng cân đối kế toán", "BÁO CÁO TÌNH HÌNH TÀI CHÍNH"] },
+  "review_mode": "threshold",
+  "fields": [
+    { "ten": "ten_khach_hang", "kieu": "text", "loai": "extract",
+      "mo_ta": "Tên công ty, doanh nghiệp (bỏ tên tiếng Anh nếu song ngữ)",
+      "use_ocr_hint": false, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "dia_chi", "kieu": "text", "loai": "extract",
+      "mo_ta": "Địa chỉ khách hàng (trả thêm cả Quận/Huyện và Tỉnh/Thành phố nếu có)",
+      "use_ocr_hint": false, "min_confidence": 0.9, "regex": null },
+
+    { "ten": "so_dang_ky_kinh_doanh", "kieu": "text", "loai": "extract",
+      "mo_ta": "Mã số thuế hoặc Số đăng ký kinh doanh (gồm 10 hoặc 13 chữ số), thường nằm ngay dưới Tên khách hàng hoặc Địa chỉ",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": null },
+
+    { "ten": "ngay_ket_thuc_nien_do", "kieu": "text", "loai": "extract",
+      "mo_ta": "Báo cáo tại ngày hoặc năm tài chính kết thúc, thường nằm ngay dưới tên bảng. CHỈ trả về thời gian, ví dụ 'Quý IV 2003', '31/12/2024'. Chỉ trả thời gian cuối cùng kết thúc niên độ",
+      "use_ocr_hint": false, "min_confidence": 0.97, "regex": null },
+
+    { "ten": "loai_tien_te", "kieu": "text", "loai": "extract",
+      "mo_ta": "Loại tiền sử dụng của quốc gia, ví dụ: VND, USD, VND'000",
+      "use_ocr_hint": true, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "don_vi_tien_te", "kieu": "text", "loai": "extract",
+      "mo_ta": "Đơn vị tính tiền để trình bày số liệu trong bảng, thường ghi phía trên bảng hoặc trong tiêu đề cột, ví dụ: Đồng, Triệu đồng (nếu VND'000 thì giữ nguyên VND'000)",
+      "use_ocr_hint": true, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "thong_tin_chi_tieu", "kieu": "table", "loai": "extract",
+      "mo_ta": "Thông tin về các chỉ tiêu. MỖI DÒNG có MÃ SỐ trên bảng (ví dụ 100, 110, 111, 112, 120, 130, 131...) là MỘT phần tử. Liệt kê TỪNG dòng có mã số, KHÔNG gộp nhóm, KHÔNG tóm tắt, KHÔNG bỏ dòng con. Giữ nguyên số có dấu chấm phân cách nghìn; ô trống để \"\"",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": null,
+      "columns": [
+        { "ten": "ten_chi_tieu",    "mo_ta": "Tên chỉ tiêu, GIỮ NGUYÊN cả tiền tố đầu dòng, ví dụ 'A - TÀI SẢN NGẮN HẠN', 'I. Tiền và các khoản tương đương tiền', '1. Tiền'" },
+        { "ten": "ma_chi_tieu",     "mo_ta": "MÃ SỐ chỉ tiêu ở CỘT MÃ SỐ riêng, LUÔN là 2-3 CHỮ SỐ (100, 110, 111, 112, 130, 131...). KHÔNG lấy chữ cái A/B/C hay số La Mã I/II/III ở đầu tên chỉ tiêu", "regex": "\\d{2,3}" },
+        { "ten": "so_tien_cuoi_ky", "mo_ta": "Giá trị cột Số tiền cuối kỳ (giữ dấu chấm phân cách nghìn; số âm trong ngoặc)" },
+        { "ten": "so_tien_dau_ky",  "mo_ta": "Giá trị cột Số tiền đầu kỳ (giữ dấu chấm phân cách nghìn; số âm trong ngoặc)" }
+      ] }
+  ]
+}

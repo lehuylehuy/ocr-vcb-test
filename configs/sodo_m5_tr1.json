@@ -1,0 +1,43 @@
+{
+  "config_id": "sodo_m5_tr1",
+  "ten": "Sổ đỏ mẫu 5 - trang 1",
+  "type_config": "SODO_M5",
+  "identifier": { "mode": "multiple", "fields": ["Thửa đất số", "Tờ bản đồ số"] },
+  "review_mode": "threshold",
+  "fields": [
+    { "ten": "ho_ten_chu_so_huu", "kieu": "text", "loai": "extract",
+      "mo_ta": "họ tên người sử dụng đất, BỎ chữ Ông/Bà đứng trước",
+      "use_ocr_hint": false, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "so_cccd", "kieu": "text", "loai": "extract",
+      "mo_ta": "12 chữ số, bắt đầu bằng 0",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": "^0\\d{11}$" },
+
+    { "ten": "thua_dat_so", "kieu": "number", "loai": "extract",
+      "mo_ta": "số thửa đất, sau chữ 'Thửa đất số'",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": "^\\d+$" },
+
+    { "ten": "to_ban_do_so", "kieu": "number", "loai": "extract",
+      "mo_ta": "số tờ bản đồ, sau chữ 'Tờ bản đồ số'",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": "^\\d+$" },
+
+    { "ten": "dien_tich_dat_m2", "kieu": "number", "loai": "extract",
+      "mo_ta": "diện tích đất, chỉ ghi số ví dụ 68,95 — bỏ 'm²'",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": "^\\d+([.,]\\d+)?$" },
+
+    { "ten": "loai_dat", "kieu": "text", "loai": "extract",
+      "mo_ta": "mục đích sử dụng đất, ví dụ 'Đất ở tại đô thị (ODT)'",
+      "use_ocr_hint": false, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "dia_chi_thua_dat", "kieu": "text", "loai": "extract",
+      "mo_ta": "địa chỉ thửa đất, có thể trải nhiều dòng — ghép lại thành một",
+      "use_ocr_hint": false, "min_confidence": 0.90, "regex": null },
+
+    { "ten": "ngay_cap", "kieu": "date", "loai": "extract",
+      "mo_ta": "cuối trang 'ngày X tháng Y năm Z', có thể VIẾT TAY — nhìn kỹ ảnh; đổi thành dd/mm/yyyy",
+      "use_ocr_hint": false, "min_confidence": 0.97, "regex": "^\\d{1,2}/\\d{1,2}/\\d{4}$" },
+
+    { "ten": "ghi_chu_ttv", "kieu": "text", "loai": "manual",
+      "mo_ta": "ghi chú của thẩm tra viên", "min_confidence": 0.97 }
+  ]
+}

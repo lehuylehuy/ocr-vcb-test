@@ -1,0 +1,6 @@
+openai>=1.50
+pypdfium2>=4.30
+pillow>=10.0
+python-dotenv>=1.0
+paddleocr>=3.7
+paddlepaddle>=3.3

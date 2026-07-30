@@ -1,0 +1,48 @@
+{
+  "config_id": "giay_dkdn",
+  "ten": "Giấy chứng nhận đăng ký doanh nghiệp (TNHH)",
+  "type_config": "GCN_DKDN",
+  "identifier": { "mode": "multiple", "fields": ["Mã số doanh nghiệp", "Vốn điều lệ"] },
+  "review_mode": "threshold",
+  "fields": [
+    { "ten": "ma_so_doanh_nghiep", "kieu": "text", "loai": "extract",
+      "mo_ta": "mã số doanh nghiệp, dãy số sau 'Mã số doanh nghiệp'",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": "^\\d{9,13}$" },
+
+    { "ten": "ten_cong_ty", "kieu": "text", "loai": "extract",
+      "mo_ta": "tên công ty viết bằng tiếng Việt (đầy đủ)",
+      "use_ocr_hint": false, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "ten_viet_tat", "kieu": "text", "loai": "extract",
+      "mo_ta": "tên công ty viết tắt",
+      "use_ocr_hint": false, "min_confidence": 0.90, "regex": null },
+
+    { "ten": "dia_chi_tru_so", "kieu": "text", "loai": "extract",
+      "mo_ta": "địa chỉ trụ sở chính, có thể nhiều dòng — ghép lại",
+      "use_ocr_hint": false, "min_confidence": 0.90, "regex": null },
+
+    { "ten": "dien_thoai", "kieu": "text", "loai": "extract",
+      "mo_ta": "số điện thoại",
+      "use_ocr_hint": true, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "email", "kieu": "text", "loai": "extract",
+      "mo_ta": "địa chỉ email",
+      "use_ocr_hint": true, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "von_dieu_le", "kieu": "text", "loai": "extract",
+      "mo_ta": "vốn điều lệ (bằng số + 'đồng'), ví dụ 1.900.000.000 đồng",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": null },
+
+    { "ten": "chu_so_huu_ho_ten", "kieu": "text", "loai": "extract",
+      "mo_ta": "họ và tên chủ sở hữu / người đại diện, mục 'Thông tin về chủ sở hữu'",
+      "use_ocr_hint": false, "min_confidence": 0.95, "regex": null },
+
+    { "ten": "chu_so_huu_ngay_sinh", "kieu": "date", "loai": "extract",
+      "mo_ta": "ngày sinh chủ sở hữu, đổi thành dd/mm/yyyy",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": "^\\d{1,2}/\\d{1,2}/\\d{4}$" },
+
+    { "ten": "chu_so_huu_so_giay_to", "kieu": "text", "loai": "extract",
+      "mo_ta": "số giấy chứng thực cá nhân (CMND/CCCD) của chủ sở hữu",
+      "use_ocr_hint": true, "min_confidence": 0.97, "regex": null }
+  ]
+}
