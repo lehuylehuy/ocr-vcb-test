@@ -8,8 +8,9 @@ toạ độ, **VLM** hiểu ngữ nghĩa và trích field theo **cấu hình do 
 
 1. **Config-driven** — khai *tài liệu có trường nào, mô tả ra sao* bằng file cấu hình.
    Thêm loại giấy mới = thêm cấu hình, **không sửa code, không train model**.
-2. **Human-in-the-loop** — mỗi field có **confidence**; cổng tự duyệt theo ngưỡng (mặc định
-   97%), chỉ trường dưới ngưỡng mới cần người hậu kiểm.
+2. **Human-in-the-loop** — mỗi field có **confidence**; cổng tự duyệt theo ngưỡng khai
+   trong config (chính sách 3 bậc 0.90/0.95/0.97 — xem [docs/THEM_LOAI_TAI_LIEU.md](docs/THEM_LOAI_TAI_LIEU.md)),
+   chỉ trường dưới ngưỡng mới cần người hậu kiểm.
 3. **Giải thích được** — mỗi giá trị gắn **bounding box** trỏ về vị trí gốc trên ảnh.
 
 ## Luồng pipeline
@@ -25,31 +26,41 @@ Chi tiết: [docs/KIEN_TRUC.md](docs/KIEN_TRUC.md).
 
 | Tài liệu | Nội dung |
 |---|---|
-| [docs/BAT_DAU_CHO_NGUOI_MOI.md](docs/BAT_DAU_CHO_NGUOI_MOI.md) | 👶 **Người mới bắt đầu ở đây** — chạy từ số 0, giải thích từng dòng |
-| [docs/THEM_LOAI_TAI_LIEU.md](docs/THEM_LOAI_TAI_LIEU.md) | ➕ **Thêm & test nhiều loại tài liệu** — chỉ thêm file JSON, không sửa code |
-| [docs/TODO_CAI_TIEN_LIEN_TUC.md](docs/TODO_CAI_TIEN_LIEN_TUC.md) | 🔄 TODO nghiên cứu sau — "bánh đà dữ liệu" (train lại, human-in-the-loop) |
+| [docs/THEM_LOAI_TAI_LIEU.md](docs/THEM_LOAI_TAI_LIEU.md) | ➕ **Thêm & test loại tài liệu** — chỉ thêm file JSON; chính sách ngưỡng `min_confidence` |
 | [docs/KIEN_TRUC.md](docs/KIEN_TRUC.md) | Kiến trúc, 3 vai (OCR đọc · điều phối quyết · VLM hiểu), I/O từng bước, bảo mật |
 | [docs/MO_HINH_DU_LIEU.md](docs/MO_HINH_DU_LIEU.md) | Loại tài liệu · Cấu hình · Trường · Hệ thống — ERD + SQL |
-| [docs/TRIEN_KHAI_VA_TEST.md](docs/TRIEN_KHAI_VA_TEST.md) | **Hướng dẫn cài đặt, chạy, test (Mac dev + GPU thuê)** |
-| [GPU_TEST_PLAN.md](GPU_TEST_PLAN.md) | Checklist test trên GPU thuê (RunPod) |
+| [docs/TRIEN_KHAI_VA_TEST.md](docs/TRIEN_KHAI_VA_TEST.md) | **Hướng dẫn cài đặt, chạy, test (Mac dev + GPU UAT)** |
 
-## Chạy nhanh (đã kiểm chứng trên Mac)
+## Cài đặt
 
-Người mới hoàn toàn: làm theo [docs/BAT_DAU_CHO_NGUOI_MOI.md](docs/BAT_DAU_CHO_NGUOI_MOI.md)
-(giải thích từng lệnh). Tóm tắt các lệnh:
 ```bash
 cd ~/Documents/Project/VCB/vcb-ocr
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-cp .env.example .env                                   # trỏ Ollama qwen2.5vl:3b
-sed -i '' 's/^MAX_SIDE=.*/MAX_SIDE=1024/' .env         # Mac: ảnh nhỏ cho vừa context
-export OLLAMA_CONTEXT_LENGTH=8192                       # nới context Ollama
-.venv/bin/python pipeline.py data/samples/sodo_1.pdf   # chạy
-.venv/bin/python evaluate.py output/ data/ground_truth/# chấm điểm
 ```
 
-> Trên Mac (Ollama) đặt `MAX_SIDE=1024` trong `.env` do context nhỏ. Trên GPU (vLLM) dùng
-> `MAX_SIDE=2048` — xem [docs/TRIEN_KHAI_VA_TEST.md](docs/TRIEN_KHAI_VA_TEST.md).
+## Chọn "bộ não" — sửa `.env` (bật/tắt 1 khối, không sửa code)
+
+`.env` có sẵn 2 khối, đổi môi trường = comment khối này / bỏ comment khối kia:
+
+| Môi trường | Model | Yêu cầu bật trước |
+|---|---|---|
+| **UAT / GPU 32GB** (mặc định) | vLLM + `Qwen3-VL-8B-Instruct` | `vllm serve Qwen/Qwen3-VL-8B-Instruct --max-model-len 16384 --port 8000` (cần vLLM đủ mới hỗ trợ Qwen3-VL) |
+| **Mac dev** | Ollama + `qwen2.5vl-3b-16k` | `ollama pull qwen2.5vl:3b` + tạo bản context 16k (xem TRIEN_KHAI_VA_TEST) |
+
+## Chạy
+
+```bash
+# BCTC (có field bảng theo cột)
+.venv/bin/python pipeline.py data/samples/bctc_tt200_cdkt_p1.pdf --configs configs/bctc_tt200_cdkt.json
+# Sổ đỏ (tự nạp mọi config trong configs/ rồi chọn loại đúng)
+.venv/bin/python pipeline.py data/samples/sodo_1.pdf
+# Chấm điểm so ground_truth
+.venv/bin/python evaluate.py output/ data/ground_truth/
+```
+
+Kết quả ở `output/<tên>.json`. Chi tiết cài đặt/serve từng môi trường:
+[docs/TRIEN_KHAI_VA_TEST.md](docs/TRIEN_KHAI_VA_TEST.md).
 
 ## Cấu trúc
 
@@ -57,7 +68,8 @@ export OLLAMA_CONTEXT_LENGTH=8192                       # nới context Ollama
 vcb-ocr/
 ├── config.py               # đọc .env (chọn model)
 ├── configs/                # ⭐ cấu hình tài liệu (mô phỏng DB) — prompt sinh từ đây
-│   └── sodo_m5_tr1.json
+│   ├── sodo_m5_tr1.json     #   sổ đỏ · dang_ky_oto · giay_dkdn
+│   └── bctc_tt200_cdkt.json #   BCTC (port từ config VCB thật, có field bảng)
 ├── core/
 │   ├── preprocess.py       # PDF → ảnh
 │   ├── ocr_client.py       # OCR nhỏ → Word{text,bbox,conf} (đổi sang Triton sau)

@@ -79,15 +79,16 @@ hiệu chuẩn ngưỡng confidence. Chi phí ~1–2 USD/buổi. Checklist ở [
 pip install -U vllm openai rapidocr-onnxruntime pypdfium2 pillow python-dotenv
 git clone <repo> /workspace/vcb-ocr && cd /workspace/vcb-ocr
 
-vllm serve Qwen/Qwen2.5-VL-7B-Instruct \
+vllm serve Qwen/Qwen3-VL-8B-Instruct \
   --port 8000 --served-model-name ocr-extractor \
   --max-model-len 16384 --limit-mm-per-prompt image=2 \
   --gpu-memory-utilization 0.92 > /workspace/vllm.log 2>&1 &
 tail -f /workspace/vllm.log        # chờ "Uvicorn running on ... :8000"
 curl http://localhost:8000/v1/models
 ```
-Nếu OOM: giảm `--max-model-len 8192`, hoặc dùng `Qwen/Qwen2.5-VL-7B-Instruct-AWQ`, hoặc GPU 48GB.
-Nếu báo không hỗ trợ model: `pip install -U vllm transformers`, kiểm tra tên tag trên HuggingFace.
+Nếu OOM: giảm `--max-model-len 8192`, hoặc bản quantize `Qwen/Qwen3-VL-8B-Instruct-FP8`, hoặc GPU lớn hơn.
+**Qwen3-VL cần vLLM đủ mới** — nếu báo "unknown architecture"/không hỗ trợ model:
+`pip install -U vllm transformers`, kiểm tra release note vLLM hỗ trợ Qwen3-VL + tên tag trên HuggingFace.
 
 ### B.4 Chạy pipeline (trên pod)
 `.env` trên pod:

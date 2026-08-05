@@ -147,7 +147,7 @@ need_review = conf < min_confidence (mặc định 0.97)
 | Giai đoạn | OCR nhỏ | VLM |
 |---|---|---|
 | **v1 (nay)** | RapidOCR trong Python | Ollama qwen2.5vl:3b (Mac) |
-| **v2 (GPU thuê)** | RapidOCR / +VietOCR rec | vLLM + Qwen2.5-VL-7B |
+| **v2 (GPU thuê)** | RapidOCR / +VietOCR rec | vLLM + Qwen3-VL-8B |
 | **v3 (PROD)** | Triton (ONNX ensemble) | vLLM nhiều replica, +LoRA fine-tune |
 
 Giữ **ranh giới sạch** (mỗi vai một module, hợp đồng I/O rõ) để đổi vỏ chỉ sửa 1 file.

@@ -20,7 +20,8 @@ def call_vlm(client, model: str, img, prompt: str, schema: dict) -> dict:
         {"type": "image_url", "image_url": {"url": image_to_data_uri(img)}},
         {"type": "text", "text": prompt},
     ]
-    kwargs = dict(model=model, temperature=0, max_tokens=4096,
+    # 8192: đủ chỗ cho bảng dài (BCTC ~40+ dòng JSON) trên 7B/vLLM context lớn.
+    kwargs = dict(model=model, temperature=0, max_tokens=8192,
                   messages=[{"role": "user", "content": content}])
 
     # Thử bật guided decoding + logprobs (vLLM). Nếu server không nhận → hạ cấp dần.
